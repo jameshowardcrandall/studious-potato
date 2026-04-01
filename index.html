@@ -750,7 +750,7 @@
   <div class="hero-tag">Army National Guard · NGB · Arlington Readiness Center</div>
   <h1>Title 10 <span>AGR</span> Position Management</h1>
   <p class="hero-sub">
-    A structured intelligence model for managing the Title 10 Active Guard Reserve population — tracking the federal authorization chain from NGB ceiling to funded billet, the full population inventory including students, CLP, and medical holds, and automated anomaly detection for dual slots, transition gaps, and unfunded assignments.
+    A structured intelligence model for managing the Title 10 Active Guard Reserve population — tracking the federal authorization chain from NGB ceiling to funded billet, the full population inventory including students, command list positions (CLP), and medical holds, and automated anomaly detection for dual slots, transition gaps, and unfunded assignments.
   </p>
   <div class="hero-cta">
     <a href="#model" class="btn btn-primary">Explore the Model</a>
@@ -778,7 +778,7 @@
   <div class="section-tag">&sect; 01 — The Problem</div>
   <h2>What's Breaking Today</h2>
   <p class="section-lead">
-    Title 10 AGR position management has no authoritative system of record. IPPS-A is incomplete for T10, assignments are frequently wrong, and large portions of the population — students, CLP, medical holds — are invisible to the manning picture.
+    Title 10 AGR position management has no authoritative system of record. IPPS-A is incomplete for T10, assignments are frequently wrong, and large portions of the population — students, command list positions, medical holds — are invisible to the manning picture.
   </p>
   <div class="problem-grid stagger">
     <div class="problem-card red">
@@ -799,7 +799,7 @@
     <div class="problem-card amber">
       <div class="p-card-label">Issue 04</div>
       <div class="p-card-title">Invisible Population Segments</div>
-      <p class="p-card-body">Students at PME, soldiers in DLIFLC language training (CLP), medical holds in the MEB/PEB pipeline, and PPP excess soldiers all consume end-strength authorizations but don't appear in position-based manning reports — creating a gap between authorized, assigned, and present-for-duty strength.</p>
+      <p class="p-card-body">Students at PME, centrally-selected command leaders on the CLP (Command List Position) awaiting assignment, medical holds in the MEB/PEB pipeline, and PPP excess soldiers all consume end-strength authorizations but don't appear in position-based manning reports — creating a gap between authorized, assigned, and present-for-duty strength.</p>
     </div>
   </div>
 </section>
@@ -917,7 +917,7 @@
   <div class="section-tag">&sect; 04 — Full Population Inventory</div>
   <h2>Where Every T10 AGR Soldier Lives</h2>
   <p class="section-lead">
-    The T10 AGR population extends far beyond soldiers filling positions. Students, linguists in CLP training, medical holds, transients, and excess soldiers all consume end-strength authorizations. Every segment must be tracked to reconcile authorized vs. assigned vs. present-for-duty strength.
+    The T10 AGR population extends far beyond soldiers filling positions. Students, command list positions (CLP), medical holds, transients, and excess soldiers all consume end-strength authorizations. Every segment must be tracked to reconcile authorized vs. assigned vs. present-for-duty strength.
   </p>
   <div class="pop-grid stagger">
     <div class="pop-card highlight">
@@ -935,10 +935,10 @@
     </div>
     <div class="pop-card highlight">
       <div class="pop-icon">&#9733;</div>
-      <div class="pop-title">CLP / Language Training</div>
-      <p class="pop-body">Soldiers in language-coded positions (35P, 09L, MI billets) attending DLIFLC for refresher, enhancement, or new language acquisition. Courses run 6–18+ months. Managed under AR 11-6 Command Language Program. Soldier consumes end-strength, position shows filled but soldier is at Monterey.</p>
+      <div class="pop-title">CLP — Command List Position</div>
+      <p class="pop-body">Centrally selected command leaders — CSMs, battalion/brigade commanders — managed by NGB Human Capital Management (HCM). Selected through HQDA CSM Selection Boards or Centralized Selection List (CSL) for officers. Carried on the CLP/COP (Command Order of Precedence) and tracked centrally by NGB, not against a specific state TDA line. Consumes T10 end-strength but has no position authorization until slated to a vacancy. Governed by PPOM 24-013, CNGBI 0160.00 (Senior Enlisted Bench), and NGR 600-5.</p>
       <span class="pop-tag consumes">Consumes End-Strength</span>
-      <span class="pop-tag gap">Position Gap</span>
+      <span class="pop-tag gap">No TDA Authorization</span>
     </div>
     <div class="pop-card">
       <div class="pop-icon">&#8644;</div>
@@ -1170,9 +1170,9 @@
       <p class="reg-body">Defines reserve categories including how AGR fits within the Selected Reserve for accounting and management purposes.</p>
     </div>
     <div class="reg-card">
-      <div class="reg-num">AR 11-6</div>
-      <div class="reg-title">Army Foreign Language Program</div>
-      <p class="reg-body">Governs the Command Language Program (CLP), linguist management, DLIFLC training, and Foreign Language Proficiency Bonus (FLPB).</p>
+      <div class="reg-num">CNGBI 0160.00</div>
+      <div class="reg-title">Senior Enlisted Leadership Bench Program</div>
+      <p class="reg-body">Governs management of T10 E9 positions reporting to general officers. Establishes the Senior Enlisted Bench and CSELAB advisory board for command leadership assignment.</p>
     </div>
     <div class="reg-card">
       <div class="reg-num">AR 635-40</div>
@@ -1219,16 +1219,16 @@
     <span class="problem">-- No outgoing/incoming relationship native to the schema.</span><br>
     <span class="problem">-- Projected end date manually maintained — frequently stale.</span><br>
     <span class="problem">-- No TTHS category tracking (students, transients, holdees).</span><br>
-    <span class="problem">-- CLP/language training status not represented.</span>
+    <span class="problem">-- CLP (Command List Position) soldiers not tracked in schema.</span>
   </div>
   <div class="insight-cols">
     <div class="insight-block reveal">
       <h3>What IPPS-A Gets Wrong</h3>
-      <p>PeopleSoft's person model assumes one primary employment relationship. "Additional assignments" (EMPL_RCD &gt; 0) are designed for concurrent roles at the same organization — not for modeling a position handoff between two different soldiers. The official ARNG workaround annex documents a multi-step hack to process an AGR retirement that deliberately avoids hitting the soldier's iPERMS record. There is no TTHS categorization, no CLP tracking, and no way to distinguish a soldier filling a position from one consuming end-strength at DLIFLC.</p>
+      <p>PeopleSoft's person model assumes one primary employment relationship. "Additional assignments" (EMPL_RCD &gt; 0) are designed for concurrent roles at the same organization — not for modeling a position handoff between two different soldiers. The official ARNG workaround annex documents a multi-step hack to process an AGR retirement that deliberately avoids hitting the soldier's iPERMS record. There is no TTHS categorization, no CLP (Command List Position) tracking, and no way to distinguish a soldier filling a position from one centrally managed by NGB awaiting command assignment.</p>
     </div>
     <div class="insight-block reveal">
       <h3>What Your System Owns</h3>
-      <p>IPPS-A data is an input signal — useful for EMPLID, grade, MOS, and orders numbers. It is not a source of truth for who is actually in what position. Your system builds and owns the position-to-person relationship table with explicit outgoing/incoming modeling, funded/unfunded state, the full federal authorization chain, and a complete population inventory covering all 10 segments — from position-holders to students, CLP linguists, medical holds, PPP excess, and sanctuary soldiers.</p>
+      <p>IPPS-A data is an input signal — useful for EMPLID, grade, MOS, and orders numbers. It is not a source of truth for who is actually in what position. Your system builds and owns the position-to-person relationship table with explicit outgoing/incoming modeling, funded/unfunded state, the full federal authorization chain, and a complete population inventory covering all 10 segments — from position-holders to students, CLP command leaders, medical holds, PPP excess, and sanctuary soldiers.</p>
     </div>
   </div>
 </section>
