@@ -2,7 +2,7 @@
 
 Internal landing page for an Army National Guard unit. Desktop canvas app that serves as a directory / jump-off point for all the apps and dashboards owned by each G-staff section. Users open one app, see a 3×2 grid of staff sections (COS, G1, G2/G6/IA/ADS, G3/G5/G5, G4/G9, G8), click a tile, and see that section's products with direct links to each product's Dashboard, Model-driven app, and Canvas app.
 
-An **admin experience** is baked into the same canvas app so OPR admins can add/edit/delete products and their links without leaving the portal.
+A **partial admin experience** is baked into the same canvas app so OPR admins can add/edit products. Link management is not yet in-app — see the *Known issues* section below.
 
 ## Architecture
 
@@ -12,10 +12,8 @@ studious-potato/army-guard-landing-page/
 │   ├── App.pa.yaml                 # App.OnStart, App.Formulas brand palette
 │   ├── ScreenHome.pa.yaml          # 3×2 tile grid landing page
 │   ├── ScreenDetail.pa.yaml        # Section drill-down with product links
-│   ├── ScreenAdmin.pa.yaml         # Admin product gallery
-│   ├── ScreenProductForm.pa.yaml   # Add/edit product (Patch-based form)
-│   ├── ScreenLinksAdmin.pa.yaml    # Per-product links management
-│   └── ScreenLinkForm.pa.yaml      # Add/edit link (Patch-based form)
+│   ├── ScreenAdmin.pa.yaml         # Admin product gallery (LINKS button stubbed — see Known issues)
+│   └── ScreenProductForm.pa.yaml   # Add/edit product (Patch-based form)
 ├── solutions/
 │   └── ArmyGuardLandingPage/       # Unpacked Dataverse solution
 │       ├── Entities/
@@ -111,15 +109,25 @@ ScreenHome  ──click tile──►  ScreenDetail  (drill-down, end-user view)
    │
    └──click ADMIN──►  ScreenAdmin  ──EDIT──►  ScreenProductForm
                           │
-                          └─LINKS──►  ScreenLinksAdmin  ──EDIT──►  ScreenLinkForm
+                          └─LINKS──►  (currently stubbed — returns to ScreenHome)
 ```
 
 Shared state (global variables):
 - `selectedSection` — the staff section chosen on ScreenHome, read by ScreenDetail
 - `editProduct` — the product row being edited in ScreenProductForm
-- `editLink` — the link row being edited in ScreenLinkForm
-- `currentProduct` — the product whose links are being managed in ScreenLinksAdmin / ScreenLinkForm
 - `editMode` — `"new"` or `"edit"`, controls form branching
+- `currentProduct` — set by the (stubbed) LINKS button; reserved for future link-management screens
+
+## Known issues
+
+**Link management is not yet in-app.** Full admin originally included `ScreenLinksAdmin` and `ScreenLinkForm` screens for managing the `arng_ProductLink` rows per product. Pushing those additional screens caused a rendering regression on ScreenHome/ScreenDetail: the `ThisItem.Code` / `ThisItem.Name` text in the tile grid and the `selectedSection.arng_name` header on the detail screen failed to render (text went blank while rectangles/buttons still rendered fine). Root cause is suspected to be Power Apps' display-name resolver getting confused by this schema's primary key columns (`arng_staffsectionid`, `arng_productid`) which have the auto-generated display names `arng_StaffSection` / `arng_Product` / `arng_ProductLink` that collide with the table schema names. The regression scales with formula-graph complexity, which is why it only shows up when ≥ 3 admin screens are added.
+
+**Working hypotheses for the fix (any one of these should unstick it):**
+1. **Rewrite lookup filters to avoid dot-walking through the PK GUID.** Change `Filter(arng_Products, arng_SectionId.arng_staffsectionid = selectedSection.arng_staffsectionid)` to `Filter(arng_Products, arng_SectionId = selectedSection)` — Power Fx supports direct record comparison on lookup columns.
+2. **Rename the PK display names** on `arng_StaffSection` / `arng_Product` / `arng_ProductLink` from the auto-generated same-as-schema-name form to something unambiguous (e.g., `Staff Section Id`, `Product Id`, `Product Link Id`).
+3. **Re-author the admin screens manually in Power Apps Studio** rather than pushing `.pa.yaml` via the Canvas Authoring MCP, in case this is a coauthoring-push quirk rather than a formula issue.
+
+Until then, product links can be managed directly via the `arng_ProductLink` table in the Dataverse maker portal, or by running the seed/import scripts in this folder.
 
 ## Per-OPR security
 

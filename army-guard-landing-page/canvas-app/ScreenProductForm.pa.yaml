@@ -1,3 +1,11 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
 Screens:
   ScreenProductForm:
     Properties:
@@ -5,20 +13,20 @@ Screens:
       OnVisible: =true
     Children:
       - rctHeaderBgProductForm:
-          Control: Rectangle
+          Control: Rectangle@2.3.0
           Properties:
             Fill: =ColorNavyDeep
             Height: =112
             Width: =Parent.Width
       - rctGoldRuleProductForm:
-          Control: Rectangle
+          Control: Rectangle@2.3.0
           Properties:
             Fill: =ColorGold
             Height: =4
             Width: =Parent.Width
             Y: =112
       - btnBackProductForm:
-          Control: Button
+          Control: Button@0.0.45
           Properties:
             Align: =Align.Left
             Appearance: ='ButtonCanvas.Appearance'.Transparent
@@ -37,7 +45,7 @@ Screens:
             X: =32
             Y: =40
       - lblFormTitleProduct:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorTextPrimary
             Font: =Font.'Segoe UI'
@@ -50,7 +58,7 @@ Screens:
             X: =176
             Y: =32
       - lblFormSubtitleProduct:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorGold
             Font: =Font.'Segoe UI'
@@ -62,7 +70,7 @@ Screens:
             X: =176
             Y: =80
       - lblFieldNameProduct:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorGold
             Font: =Font.'Segoe UI'
@@ -74,7 +82,7 @@ Screens:
             X: =(Parent.Width - 800) / 2 + 40
             Y: =156
       - txtNameProduct:
-          Control: ModernTextInput
+          Control: ModernTextInput@1.0.0
           Properties:
             Appearance: =Appearance.Outline
             BorderColor: =ColorGoldMuted
@@ -83,17 +91,14 @@ Screens:
             Default: =Coalesce(editProduct.arng_name, "")
             Fill: =ColorNavySurface
             Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Normal
             Height: =44
             Placeholder: ="Enter product name"
             Required: =true
-            Size: =14
-            Type: =TextInputType.SingleLine
             Width: =720
             X: =(Parent.Width - 800) / 2 + 40
             Y: =180
       - lblFieldSectionProduct:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorGold
             Font: =Font.'Segoe UI'
@@ -105,7 +110,7 @@ Screens:
             X: =(Parent.Width - 800) / 2 + 40
             Y: =244
       - cmbSectionProduct:
-          Control: ModernCombobox
+          Control: ModernCombobox@1.0.0
           Properties:
             Appearance: =Appearance.Outline
             BorderColor: =ColorGoldMuted
@@ -114,19 +119,16 @@ Screens:
             DefaultSelectedItems: =If(editMode = "edit" && !IsBlank(editProduct.arng_SectionId), Table(editProduct.arng_SectionId), Blank())
             Fill: =ColorNavySurface
             Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Normal
             Height: =44
             InputTextPlaceholder: ="Select a staff section"
-            IsSearchable: =true
             ItemDisplayText: =ThisItem.arng_name
             Items: =SortByColumns(Filter(arng_StaffSections, statecode = 'Status (arng_StaffSections)'.Active), "arng_displayorder", SortOrder.Ascending)
             SelectMultiple: =false
-            Size: =14
             Width: =720
             X: =(Parent.Width - 800) / 2 + 40
             Y: =268
       - lblFieldDescProduct:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorGold
             Font: =Font.'Segoe UI'
@@ -138,7 +140,7 @@ Screens:
             X: =(Parent.Width - 800) / 2 + 40
             Y: =332
       - txtDescProduct:
-          Control: ModernTextInput
+          Control: ModernTextInput@1.0.0
           Properties:
             Appearance: =Appearance.Outline
             BorderColor: =ColorGoldMuted
@@ -147,16 +149,14 @@ Screens:
             Default: =Coalesce(editProduct.arng_description, "")
             Fill: =ColorNavySurface
             Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Normal
             Height: =140
             Placeholder: ="Describe the product"
-            Size: =14
             Type: =TextInputType.Multiline
             Width: =720
             X: =(Parent.Width - 800) / 2 + 40
             Y: =356
       - btnSaveProduct:
-          Control: Button
+          Control: Button@0.0.45
           Properties:
             Align: =Align.Center
             Appearance: ='ButtonCanvas.Appearance'.Primary

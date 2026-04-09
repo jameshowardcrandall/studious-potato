@@ -1,3 +1,11 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
 Screens:
   ScreenAdmin:
     Properties:
@@ -5,20 +13,20 @@ Screens:
       OnVisible: =true
     Children:
       - rctHeaderBgAdmin:
-          Control: Rectangle
+          Control: Rectangle@2.3.0
           Properties:
             Fill: =ColorNavyDeep
             Height: =112
             Width: =Parent.Width
       - rctGoldRuleAdmin:
-          Control: Rectangle
+          Control: Rectangle@2.3.0
           Properties:
             Fill: =ColorGold
             Height: =4
             Width: =Parent.Width
             Y: =112
       - btnBackAdmin:
-          Control: Button
+          Control: Button@0.0.45
           Properties:
             Align: =Align.Left
             Appearance: ='ButtonCanvas.Appearance'.Transparent
@@ -37,7 +45,7 @@ Screens:
             X: =32
             Y: =40
       - lblAdminTitle:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorTextPrimary
             Font: =Font.'Segoe UI'
@@ -50,7 +58,7 @@ Screens:
             X: =176
             Y: =32
       - lblAdminSubtitle:
-          Control: ModernText
+          Control: ModernText@1.0.0
           Properties:
             Color: =ColorGold
             Font: =Font.'Segoe UI'
@@ -62,7 +70,7 @@ Screens:
             X: =176
             Y: =80
       - cmbSectionFilterAdmin:
-          Control: ModernCombobox
+          Control: ModernCombobox@1.0.0
           Properties:
             Appearance: =Appearance.Outline
             BorderColor: =ColorGoldMuted
@@ -70,19 +78,16 @@ Screens:
             Color: =ColorTextPrimary
             Fill: =ColorNavySurface
             Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Normal
             Height: =44
             InputTextPlaceholder: ="FILTER BY SECTION (ALL)"
-            IsSearchable: =true
             ItemDisplayText: =ThisItem.arng_name
             Items: =SortByColumns(Filter(arng_StaffSections, statecode = 'Status (arng_StaffSections)'.Active), "arng_displayorder", SortOrder.Ascending)
             SelectMultiple: =false
-            Size: =14
             Width: =360
             X: =48
             Y: =148
       - btnAddProductAdmin:
-          Control: Button
+          Control: Button@0.0.45
           Properties:
             Align: =Align.Center
             Appearance: ='ButtonCanvas.Appearance'.Primary
@@ -105,7 +110,7 @@ Screens:
             X: =Parent.Width - 228
             Y: =148
       - galAdminProducts:
-          Control: Gallery
+          Control: Gallery@2.15.0
           Variant: Vertical
           Properties:
             Fill: =RGBA(0,0,0,0)
@@ -127,7 +132,7 @@ Screens:
             Y: =212
           Children:
             - rctAdminRow:
-                Control: Rectangle
+                Control: Rectangle@2.3.0
                 Properties:
                   BorderColor: =ColorGoldMuted
                   BorderThickness: =1
@@ -135,13 +140,13 @@ Screens:
                   Height: =Parent.TemplateHeight - 16
                   Width: =Parent.TemplateWidth
             - rctAdminRowAccent:
-                Control: Rectangle
+                Control: Rectangle@2.3.0
                 Properties:
                   Fill: =ColorGold
                   Height: =Parent.TemplateHeight - 16
                   Width: =6
             - lblAdminProdName:
-                Control: ModernText
+                Control: ModernText@1.0.0
                 Properties:
                   Color: =ColorTextPrimary
                   Font: =Font.'Segoe UI'
@@ -154,23 +159,23 @@ Screens:
                   X: =28
                   Y: =14
             - lblAdminProdSection:
-                Control: ModernText
+                Control: ModernText@1.0.0
                 Properties:
                   Color: =ColorGold
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Semibold
                   Height: =20
                   Size: =11
-                  Text: '="SECTION: " & Upper(ThisItem.arng_SectionId.arng_name)'
+                  Text: |-
+                    ="SECTION: " & Upper(ThisItem.arng_SectionId.arng_name)
                   Width: =380
                   X: =28
                   Y: =44
             - lblAdminProdLinkCount:
-                Control: ModernText
+                Control: ModernText@1.0.0
                 Properties:
                   Color: =ColorTextSecondary
                   Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Normal
                   Height: =18
                   Size: =11
                   Text: |-
@@ -184,7 +189,7 @@ Screens:
                   X: =28
                   Y: =66
             - btnAdminEdit:
-                Control: Button
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Outline
                   BasePaletteColor: =ColorGold
@@ -206,7 +211,7 @@ Screens:
                   X: =Parent.TemplateWidth - 400
                   Y: =(Parent.TemplateHeight - 16 - 40) / 2
             - btnAdminLinks:
-                Control: Button
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Outline
                   BasePaletteColor: =ColorGold
@@ -221,13 +226,13 @@ Screens:
                   Layout: ='ButtonCanvas.Layout'.IconBefore
                   OnSelect: |-
                     =Set(currentProduct, ThisItem);
-                    Navigate(ScreenLinksAdmin, ScreenTransition.Fade)
+                    Navigate(ScreenHome, ScreenTransition.Fade)
                   Text: ="LINKS"
                   Width: =110
                   X: =Parent.TemplateWidth - 278
                   Y: =(Parent.TemplateHeight - 16 - 40) / 2
             - btnAdminDelete:
-                Control: Button
+                Control: Button@0.0.45
                 Properties:
                   Appearance: ='ButtonCanvas.Appearance'.Outline
                   BasePaletteColor: =RGBA(220, 80, 80, 1)
