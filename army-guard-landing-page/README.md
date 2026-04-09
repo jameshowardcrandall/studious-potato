@@ -89,9 +89,15 @@ source .venv/bin/activate
 pip install --upgrade azure-identity requests PowerPlatform-Dataverse-Client pandas
 
 # 4. Import the solution (tables + canvas app)
-pac solution pack --folder solutions/ArmyGuardLandingPage \
-    --zipfile solutions/ArmyGuardLandingPage.zip --packagetype Unmanaged
+#    The pre-packed ZIP is already committed at solutions/ArmyGuardLandingPage.zip
+#    so you can import directly:
 pac solution import --path solutions/ArmyGuardLandingPage.zip --publish-changes
+#
+#    Or, if you've made edits to the unpacked source under
+#    solutions/ArmyGuardLandingPage/, re-pack before importing:
+# pac solution pack --folder solutions/ArmyGuardLandingPage \
+#     --zipfile solutions/ArmyGuardLandingPage.zip --packagetype Unmanaged
+# pac solution import --path solutions/ArmyGuardLandingPage.zip --publish-changes
 
 # 5. Seed the 6 staff sections
 python scripts/seed_staffsections.py

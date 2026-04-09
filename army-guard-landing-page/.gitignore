@@ -10,8 +10,9 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Dataverse solution zips (export artifacts; the unpacked source is the truth)
-solutions/*.zip
+# Dataverse solution zips — unpacked source under solutions/<Name>/ is the
+# primary source of truth; the .zip is kept committed for easy distribution
+# (direct download / pac solution import), so nothing excluded here.
 
 # Power Apps downloaded artifacts
 *.msapp.download
