@@ -1,0 +1,123 @@
+Screens:
+  ScreenHome:
+    Properties:
+      Fill: =ColorNavy
+      OnVisible: =Set(selectedSection, Blank())
+    Children:
+      - hdrBrand:
+          Control: Header
+          Properties:
+            Fill: =ColorNavyDeep
+            Font: =Font.'Segoe UI'
+            FontColor: =ColorTextPrimary
+            Height: =88
+            IsLogoVisible: =false
+            IsProfilePictureVisible: =false
+            PaddingLeft: =48
+            PaddingRight: =48
+            Style: ='Header.Style'.Primary
+            Title: ="Army National Guard - Unit Portal"
+            TitleFontSize: =28
+      - rctGoldRule:
+          Control: Rectangle
+          Properties:
+            Fill: =ColorGold
+            Height: =4
+            Width: =Parent.Width
+            Y: =88
+      - lblSubtitle:
+          Control: ModernText
+          Properties:
+            Color: =ColorTextSecondary
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =28
+            Size: =14
+            Text: ="SELECT A STAFF SECTION"
+            Width: =Parent.Width - 96
+            X: =48
+            Y: =108
+      - galSections:
+          Control: Gallery
+          Variant: Vertical
+          Properties:
+            Fill: =RGBA(0,0,0,0)
+            Height: =Parent.Height - Self.Y - 32
+            Items: =SortByColumns(Filter(arng_StaffSections, statecode = 'Status (arng_StaffSections)'.Active), "arng_displayorder", SortOrder.Ascending)
+            ShowScrollbar: =false
+            TemplatePadding: =12
+            TemplateSize: =280
+            Width: =Parent.Width - 96
+            WrapCount: =3
+            X: =48
+            Y: =152
+          Children:
+            - rctTile:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =ColorGoldMuted
+                  BorderThickness: =1
+                  Fill: =ColorNavySurface
+                  Height: =Parent.TemplateHeight - 24
+                  HoverFill: =ColorNavyDeep
+                  OnSelect: |-
+                    =Set(selectedSection, ThisItem);
+                    Navigate(ScreenDetail, ScreenTransition.Fade)
+                  PressedFill: =ColorNavyDeep
+                  Width: =Parent.TemplateWidth - 24
+                  X: =12
+            - rctTileAccent:
+                Control: Rectangle
+                Properties:
+                  Fill: =ColorGold
+                  Height: =Parent.TemplateHeight - 24
+                  OnSelect: |-
+                    =Set(selectedSection, ThisItem);
+                    Navigate(ScreenDetail, ScreenTransition.Fade)
+                  Width: =6
+                  X: =12
+            - lblTileCode:
+                Control: ModernText
+                Properties:
+                  Color: =ColorGold
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =80
+                  Size: =40
+                  Text: =ThisItem.arng_code
+                  Width: =Parent.TemplateWidth - 60
+                  Wrap: =false
+                  X: =36
+                  Y: =60
+            - lblTileName:
+                Control: ModernText
+                Properties:
+                  Color: =ColorTextPrimary
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =60
+                  Size: =14
+                  Text: =Upper(ThisItem.arng_name)
+                  Width: =Parent.TemplateWidth - 60
+                  X: =36
+                  Y: =150
+      - btnAdmin:
+          Control: Button
+          Properties:
+            Align: =Align.Center
+            Appearance: ='ButtonCanvas.Appearance'.Outline
+            BasePaletteColor: =ColorGold
+            BorderRadius: =2
+            Font: =Font.'Segoe UI'
+            FontColor: =ColorGold
+            FontSize: =12
+            FontWeight: =FontWeight.Semibold
+            Height: =36
+            Icon: ="Settings"
+            IconStyle: ='ButtonCanvas.IconStyle'.Filled
+            Layout: ='ButtonCanvas.Layout'.IconBefore
+            OnSelect: =Navigate(ScreenAdmin, ScreenTransition.Fade)
+            Text: ="ADMIN"
+            Width: =120
+            X: =Parent.Width - 148
+            Y: =28

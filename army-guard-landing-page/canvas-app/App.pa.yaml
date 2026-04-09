@@ -1,0 +1,16 @@
+App:
+  Properties:
+    Formulas: |-
+      =// Army National Guard brand palette
+      ColorNavy = RGBA(20, 55, 91, 1);
+      ColorNavySurface = RGBA(28, 68, 110, 1);
+      ColorNavyDeep = RGBA(12, 38, 64, 1);
+      ColorGold = RGBA(201, 162, 39, 1);
+      ColorGoldHover = RGBA(224, 184, 58, 1);
+      ColorGoldMuted = RGBA(201, 162, 39, 0.35);
+      ColorTextPrimary = RGBA(255, 255, 255, 1);
+      ColorTextSecondary = RGBA(220, 210, 175, 1);
+      ColorDisabledOverlay = RGBA(255, 255, 255, 0.15);
+    OnStart: =Set(selectedSection, Blank())
+    StartScreen: =ScreenHome
+    Theme: =PowerAppsTheme

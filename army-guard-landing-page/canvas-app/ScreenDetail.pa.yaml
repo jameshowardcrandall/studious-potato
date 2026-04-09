@@ -1,0 +1,244 @@
+Screens:
+  ScreenDetail:
+    Properties:
+      Fill: =ColorNavy
+      OnVisible: =true
+    Children:
+      - rctHeaderBg:
+          Control: Rectangle
+          Properties:
+            Fill: =ColorNavyDeep
+            Height: =112
+            Width: =Parent.Width
+      - rctGoldRuleDetail:
+          Control: Rectangle
+          Properties:
+            Fill: =ColorGold
+            Height: =4
+            Width: =Parent.Width
+            Y: =112
+      - btnBackHit:
+          Control: Button
+          Properties:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BorderThickness: =0
+            Font: =Font.'Segoe UI'
+            FontColor: =ColorGold
+            FontSize: =14
+            FontWeight: =FontWeight.Semibold
+            Height: =36
+            Icon: ="ChevronLeft"
+            IconStyle: ='ButtonCanvas.IconStyle'.Filled
+            Layout: ='ButtonCanvas.Layout'.IconBefore
+            OnSelect: =Navigate(ScreenHome, ScreenTransition.Fade)
+            Text: ="BACK"
+            Width: =120
+            X: =32
+            Y: =40
+      - lblSectionTitle:
+          Control: ModernText
+          Properties:
+            Color: =ColorTextPrimary
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =56
+            Size: =24
+            Text: =If(IsBlank(selectedSection), "", selectedSection.arng_name)
+            Width: =Parent.Width - 208
+            Wrap: =false
+            X: =176
+            Y: =32
+      - lblSectionCode:
+          Control: ModernText
+          Properties:
+            Color: =ColorGold
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =24
+            Size: =12
+            Text: =If(IsBlank(selectedSection), "", Upper(selectedSection.arng_code) & "  |  UNIT PORTAL")
+            Width: =Parent.Width - 208
+            X: =176
+            Y: =80
+      - galProducts:
+          Control: Gallery
+          Variant: Vertical
+          Properties:
+            Fill: =RGBA(0,0,0,0)
+            Height: =Parent.Height - Self.Y - 32
+            Items: |-
+              =Filter(
+                  arng_Products,
+                  arng_SectionId.arng_staffsectionid = selectedSection.arng_staffsectionid,
+                  statecode = 'Status (arng_Products)'.Active
+                )
+            TemplatePadding: =10
+            TemplateSize: =132
+            Width: =Parent.Width - 96
+            X: =48
+            Y: =148
+          Children:
+            - rctRow:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =ColorGoldMuted
+                  BorderThickness: =1
+                  Fill: =ColorNavySurface
+                  Height: =Parent.TemplateHeight - 16
+                  Width: =Parent.TemplateWidth
+            - rctRowAccent:
+                Control: Rectangle
+                Properties:
+                  Fill: =ColorGold
+                  Height: =Parent.TemplateHeight - 16
+                  Width: =6
+            - lblProdName:
+                Control: ModernText
+                Properties:
+                  Color: =ColorTextPrimary
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =28
+                  Size: =18
+                  Text: =ThisItem.arng_name
+                  Width: =600
+                  Wrap: =false
+                  X: =28
+                  Y: =18
+            - lblProdDesc:
+                Control: ModernText
+                Properties:
+                  Color: =ColorTextSecondary
+                  Font: =Font.'Segoe UI'
+                  Height: =48
+                  Size: =13
+                  Text: =Coalesce(ThisItem.arng_description, "")
+                  Width: =600
+                  X: =28
+                  Y: =52
+            - btnDashboard:
+                Control: Button
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Primary
+                  BasePaletteColor: =ColorGold
+                  BorderRadius: =2
+                  Font: =Font.'Segoe UI'
+                  FontColor: =ColorNavyDeep
+                  FontSize: =12
+                  FontWeight: =FontWeight.Semibold
+                  Height: =44
+                  Icon: ="DataBarVertical"
+                  IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                  Layout: ='ButtonCanvas.Layout'.IconBefore
+                  OnSelect: |-
+                    =With(
+                        { link: First(
+                            Filter(arng_ProductLinks,
+                              arng_ProductId.arng_productid = ThisItem.arng_productid,
+                              arng_linktype = 'LinkType (arng_ProductLinks)'.DASHBOARD,
+                              statecode = 'Status (arng_ProductLinks)'.Active
+                            )
+                          ) },
+                        If(!IsBlank(link) && !IsBlank(link.arng_url), Launch(link.arng_url))
+                      )
+                  Text: ="DASHBOARD"
+                  Visible: |-
+                    =CountRows(
+                        Filter(arng_ProductLinks,
+                          arng_ProductId.arng_productid = ThisItem.arng_productid,
+                          arng_linktype = 'LinkType (arng_ProductLinks)'.DASHBOARD,
+                          statecode = 'Status (arng_ProductLinks)'.Active
+                        )
+                      ) > 0
+                  Width: =150
+                  X: =Parent.TemplateWidth - 480
+                  Y: =(Parent.TemplateHeight - 16 - 44) / 2
+            - btnModelDriven:
+                Control: Button
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Outline
+                  BasePaletteColor: =ColorGold
+                  BorderRadius: =2
+                  Font: =Font.'Segoe UI'
+                  FontColor: =ColorGold
+                  FontSize: =12
+                  FontWeight: =FontWeight.Semibold
+                  Height: =44
+                  Icon: ="AppsList"
+                  IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                  Layout: ='ButtonCanvas.Layout'.IconBefore
+                  OnSelect: |-
+                    =With(
+                        { link: First(
+                            Filter(arng_ProductLinks,
+                              arng_ProductId.arng_productid = ThisItem.arng_productid,
+                              arng_linktype = 'LinkType (arng_ProductLinks)'.MODEL_DRIVEN_APP,
+                              statecode = 'Status (arng_ProductLinks)'.Active
+                            )
+                          ) },
+                        If(!IsBlank(link) && !IsBlank(link.arng_url), Launch(link.arng_url))
+                      )
+                  Text: ="MODEL-DRIVEN"
+                  Visible: |-
+                    =CountRows(
+                        Filter(arng_ProductLinks,
+                          arng_ProductId.arng_productid = ThisItem.arng_productid,
+                          arng_linktype = 'LinkType (arng_ProductLinks)'.MODEL_DRIVEN_APP,
+                          statecode = 'Status (arng_ProductLinks)'.Active
+                        )
+                      ) > 0
+                  Width: =150
+                  X: =Parent.TemplateWidth - 322
+                  Y: =(Parent.TemplateHeight - 16 - 44) / 2
+            - btnCanvas:
+                Control: Button
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Outline
+                  BasePaletteColor: =ColorGold
+                  BorderRadius: =2
+                  Font: =Font.'Segoe UI'
+                  FontColor: =ColorGold
+                  FontSize: =12
+                  FontWeight: =FontWeight.Semibold
+                  Height: =44
+                  Icon: ="Board"
+                  IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                  Layout: ='ButtonCanvas.Layout'.IconBefore
+                  OnSelect: |-
+                    =With(
+                        { link: First(
+                            Filter(arng_ProductLinks,
+                              arng_ProductId.arng_productid = ThisItem.arng_productid,
+                              arng_linktype = 'LinkType (arng_ProductLinks)'.CANVAS_APP,
+                              statecode = 'Status (arng_ProductLinks)'.Active
+                            )
+                          ) },
+                        If(!IsBlank(link) && !IsBlank(link.arng_url), Launch(link.arng_url))
+                      )
+                  Text: ="CANVAS APP"
+                  Visible: |-
+                    =CountRows(
+                        Filter(arng_ProductLinks,
+                          arng_ProductId.arng_productid = ThisItem.arng_productid,
+                          arng_linktype = 'LinkType (arng_ProductLinks)'.CANVAS_APP,
+                          statecode = 'Status (arng_ProductLinks)'.Active
+                        )
+                      ) > 0
+                  Width: =150
+                  X: =Parent.TemplateWidth - 164
+                  Y: =(Parent.TemplateHeight - 16 - 44) / 2
+      - lblEmpty:
+          Control: ModernText
+          Properties:
+            Align: =Align.Center
+            Color: =ColorTextSecondary
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            Size: =14
+            Text: ="NO PRODUCTS ARE CURRENTLY AVAILABLE FOR THIS SECTION."
+            Visible: =CountRows(galProducts.AllItems) = 0
+            Width: =600
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =360

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityRelationships xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <EntityRelationship Name="arng_product_arng_productlink_arng_ProductId" />
+  <EntityRelationship Name="arng_staffsection_arng_product_arng_SectionId" />
+  <EntityRelationship Name="business_unit_arng_product" />
+  <EntityRelationship Name="business_unit_arng_productlink" />
+  <EntityRelationship Name="business_unit_arng_staffsection" />
+  <EntityRelationship Name="lk_arng_product_createdby" />
+  <EntityRelationship Name="lk_arng_product_modifiedby" />
+  <EntityRelationship Name="lk_arng_productlink_createdby" />
+  <EntityRelationship Name="lk_arng_productlink_modifiedby" />
+  <EntityRelationship Name="lk_arng_staffsection_createdby" />
+  <EntityRelationship Name="lk_arng_staffsection_modifiedby" />
+  <EntityRelationship Name="owner_arng_product" />
+  <EntityRelationship Name="owner_arng_productlink" />
+  <EntityRelationship Name="owner_arng_staffsection" />
+  <EntityRelationship Name="team_arng_product" />
+  <EntityRelationship Name="team_arng_productlink" />
+  <EntityRelationship Name="team_arng_staffsection" />
+  <EntityRelationship Name="user_arng_product" />
+  <EntityRelationship Name="user_arng_productlink" />
+  <EntityRelationship Name="user_arng_staffsection" />
+</EntityRelationships>

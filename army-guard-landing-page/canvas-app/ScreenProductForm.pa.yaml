@@ -1,0 +1,199 @@
+Screens:
+  ScreenProductForm:
+    Properties:
+      Fill: =ColorNavy
+      OnVisible: =true
+    Children:
+      - rctHeaderBgProductForm:
+          Control: Rectangle
+          Properties:
+            Fill: =ColorNavyDeep
+            Height: =112
+            Width: =Parent.Width
+      - rctGoldRuleProductForm:
+          Control: Rectangle
+          Properties:
+            Fill: =ColorGold
+            Height: =4
+            Width: =Parent.Width
+            Y: =112
+      - btnBackProductForm:
+          Control: Button
+          Properties:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BorderThickness: =0
+            Font: =Font.'Segoe UI'
+            FontColor: =ColorGold
+            FontSize: =14
+            FontWeight: =FontWeight.Semibold
+            Height: =36
+            Icon: ="Dismiss"
+            IconStyle: ='ButtonCanvas.IconStyle'.Filled
+            Layout: ='ButtonCanvas.Layout'.IconBefore
+            OnSelect: =Navigate(ScreenAdmin, ScreenTransition.Fade)
+            Text: ="CANCEL"
+            Width: =140
+            X: =32
+            Y: =40
+      - lblFormTitleProduct:
+          Control: ModernText
+          Properties:
+            Color: =ColorTextPrimary
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =44
+            Size: =24
+            Text: =If(editMode = "new", "ADD PRODUCT", "EDIT PRODUCT")
+            Width: =Parent.Width - 224
+            Wrap: =false
+            X: =176
+            Y: =32
+      - lblFormSubtitleProduct:
+          Control: ModernText
+          Properties:
+            Color: =ColorGold
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =24
+            Size: =12
+            Text: ="PRODUCT DETAILS"
+            Width: =Parent.Width - 224
+            X: =176
+            Y: =80
+      - lblFieldNameProduct:
+          Control: ModernText
+          Properties:
+            Color: =ColorGold
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            Size: =11
+            Text: ="NAME"
+            Width: =720
+            X: =(Parent.Width - 800) / 2 + 40
+            Y: =156
+      - txtNameProduct:
+          Control: ModernTextInput
+          Properties:
+            Appearance: =Appearance.Outline
+            BorderColor: =ColorGoldMuted
+            BorderThickness: =1
+            Color: =ColorTextPrimary
+            Default: =Coalesce(editProduct.arng_name, "")
+            Fill: =ColorNavySurface
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Normal
+            Height: =44
+            Placeholder: ="Enter product name"
+            Required: =true
+            Size: =14
+            Type: =TextInputType.SingleLine
+            Width: =720
+            X: =(Parent.Width - 800) / 2 + 40
+            Y: =180
+      - lblFieldSectionProduct:
+          Control: ModernText
+          Properties:
+            Color: =ColorGold
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            Size: =11
+            Text: ="STAFF SECTION"
+            Width: =720
+            X: =(Parent.Width - 800) / 2 + 40
+            Y: =244
+      - cmbSectionProduct:
+          Control: ModernCombobox
+          Properties:
+            Appearance: =Appearance.Outline
+            BorderColor: =ColorGoldMuted
+            BorderThickness: =1
+            Color: =ColorTextPrimary
+            DefaultSelectedItems: =If(editMode = "edit" && !IsBlank(editProduct.arng_SectionId), Table(editProduct.arng_SectionId), Blank())
+            Fill: =ColorNavySurface
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Normal
+            Height: =44
+            InputTextPlaceholder: ="Select a staff section"
+            IsSearchable: =true
+            ItemDisplayText: =ThisItem.arng_name
+            Items: =SortByColumns(Filter(arng_StaffSections, statecode = 'Status (arng_StaffSections)'.Active), "arng_displayorder", SortOrder.Ascending)
+            SelectMultiple: =false
+            Size: =14
+            Width: =720
+            X: =(Parent.Width - 800) / 2 + 40
+            Y: =268
+      - lblFieldDescProduct:
+          Control: ModernText
+          Properties:
+            Color: =ColorGold
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            Size: =11
+            Text: ="DESCRIPTION"
+            Width: =720
+            X: =(Parent.Width - 800) / 2 + 40
+            Y: =332
+      - txtDescProduct:
+          Control: ModernTextInput
+          Properties:
+            Appearance: =Appearance.Outline
+            BorderColor: =ColorGoldMuted
+            BorderThickness: =1
+            Color: =ColorTextPrimary
+            Default: =Coalesce(editProduct.arng_description, "")
+            Fill: =ColorNavySurface
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Normal
+            Height: =140
+            Placeholder: ="Describe the product"
+            Size: =14
+            Type: =TextInputType.Multiline
+            Width: =720
+            X: =(Parent.Width - 800) / 2 + 40
+            Y: =356
+      - btnSaveProduct:
+          Control: Button
+          Properties:
+            Align: =Align.Center
+            Appearance: ='ButtonCanvas.Appearance'.Primary
+            BasePaletteColor: =ColorGold
+            BorderRadius: =2
+            Font: =Font.'Segoe UI'
+            FontColor: =ColorNavyDeep
+            FontSize: =14
+            FontWeight: =FontWeight.Semibold
+            Height: =48
+            Icon: ="Save"
+            IconStyle: ='ButtonCanvas.IconStyle'.Filled
+            Layout: ='ButtonCanvas.Layout'.IconBefore
+            OnSelect: |-
+              =If(IsBlank(txtNameProduct.Text) || IsBlank(cmbSectionProduct.Selected),
+                  Notify("Name and Section are required.", NotificationType.Error),
+                  If(editMode = "new",
+                    Patch(arng_Products,
+                      Defaults(arng_Products),
+                      {
+                        arng_name: txtNameProduct.Text,
+                        arng_description: txtDescProduct.Text,
+                        arng_SectionId: cmbSectionProduct.Selected
+                      }
+                    ),
+                    Patch(arng_Products,
+                      editProduct,
+                      {
+                        arng_name: txtNameProduct.Text,
+                        arng_description: txtDescProduct.Text,
+                        arng_SectionId: cmbSectionProduct.Selected
+                      }
+                    )
+                  );
+                  Navigate(ScreenAdmin, ScreenTransition.Fade)
+                )
+            Text: ="SAVE"
+            Width: =180
+            X: =Parent.Width - 228
+            Y: =Parent.Height - 80

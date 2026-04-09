@@ -1,0 +1,26 @@
+# Environment — never commit real credentials
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Dataverse solution zips (export artifacts; the unpacked source is the truth)
+solutions/*.zip
+
+# Power Apps downloaded artifacts
+*.msapp.download
+
+# Local editor state
+.DS_Store
+.vscode/settings.json
+.claude/
+.mcp.json
+
+# PAC CLI
+.pacx/

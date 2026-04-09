@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>arng_armyguardlanding_acba5</Name>
+  <AppVersion>2026-04-09T16:59:24Z</AppVersion>
+  <Status>Ready</Status>
+  <CreatedByClientVersion>3.26034.12.0</CreatedByClientVersion>
+  <MinClientVersion>3.26034.12.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"1727","primaryDeviceHeight":"859","supportsPortrait":"true","supportsLandscape":"true","primaryFormFactor":"Tablet","showStatusBar":"false","publisherVersion":"3.26034.12","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false","m365CopilotSettingValue":"0","coauthoringEnabled":"true","multipleWritersEnabled":"true","acceptedCoauthoringTerms":"true"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <GalleryItemId xsi:nil="true"></GalleryItemId>
+  <BackgroundColor>RGBA(0,176,240,1)</BackgroundColor>
+  <DisplayName>Army Guard Landing</DisplayName>
+  <Description xsi:nil="true"></Description>
+  <CommitMessage xsi:nil="true"></CommitMessage>
+  <Publisher xsi:nil="true"></Publisher>
+  <AuthorizationReferences>[]</AuthorizationReferences>
+  <ConnectionReferences>{}</ConnectionReferences>
+  <DatabaseReferences>{"default.cds":{"databaseDetails":{"referenceType":"Environmental","environmentName":"default.cds","overrideValues":{"status":"NotSpecified","environmentVariableName":""}},"dataSources":{"arng_ProductLinks":{"entitySetName":"arng_productlinks","logicalName":"arng_productlink"},"arng_Products":{"entitySetName":"arng_products","logicalName":"arng_product"},"arng_StaffSections":{"entitySetName":"arng_staffsections","logicalName":"arng_staffsection"}}}}</DatabaseReferences>
+  <AppComponents>[]</AppComponents>
+  <AppComponentDependencies>[]</AppComponentDependencies>
+  <CanConsumeAppPass>1</CanConsumeAppPass>
+  <CanvasAppType>0</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <AdminControlBypassConsent>0</AdminControlBypassConsent>
+  <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <CdsDependencies>{"cdsdependencies":[{"logicalname":"arng_productlink","componenttype":1},{"logicalname":"arng_product","componenttype":1},{"logicalname":"arng_staffsection","componenttype":1}]}</CdsDependencies>
+  <IsCustomizable>1</IsCustomizable>
+  <BackgroundImageUri>/CanvasApps/arng_armyguardlanding_acba5_BackgroundImageUri</BackgroundImageUri>
+  <DocumentUri>/CanvasApps/arng_armyguardlanding_acba5_DocumentUri.msapp</DocumentUri>
+  <AdditionalUris>
+    <AdditionalUri>/CanvasApps/arng_armyguardlanding_acba5_AdditionalUris0_identity.json</AdditionalUri>
+  </AdditionalUris>
+</CanvasApp>
