@@ -1,0 +1,42 @@
+# REDM Statement of Work Language Guide
+
+> Copy-paste ready SOW, deliverables, performance standards, and acceptance criteria language for REDM engagements.
+
+---
+
+## Section 1: Scope of Work Language
+| The Contractor shall deliver the required capability using the Rapid Engagement Delivery Model (REDM), an iterative delivery approach optimized for Microsoft Power Platform applications. The engagement will proceed through six sequential phases: (1) Mission Alignment, during which the operational problem, stakeholder landscape, and success criteria are defined collaboratively with government stakeholders; (2) Co-Design, during which subject matter experts, architects, and stakeholders design the solution data model and security framework before development begins; (3) Rapid Build Cycles, during which working capability is built and demonstrated in two-week increments with continuous stakeholder feedback; (4) Validation and Hardening, during which the solution is refined, tested, and prepared for production deployment; (5) Deployment and Training, during which the solution is released to production and operational personnel are trained; and (6) Sustainment and Growth, during which the engagement transitions to a support cadence and the foundation is set for future enhancement work. |
+
+| The primary delivery commitment is Initial Operational Capability (IOC), defined as a production-deployed solution that performs core operational workflows end-to-end, enforces security controls per the approved RBAC design, and is confirmed by the government business owner as supporting real operational use. IOC shall be achieved within [specify number] weeks of engagement start. Prior to IOC, the Contractor shall conduct twice-weekly engagement sessions (Tuesdays and Thursdays) with government stakeholders, during which working capability is demonstrated, feedback is solicited, and direction decisions are made collaboratively. Stakeholder feedback categorized as 'Do Now' (this cycle) shall be incorporated within 48 hours; feedback categorized as 'Queue' or 'Escalate' shall be triaged and recorded in an active decision log maintained throughout the engagement. |
+
+## Section 2: Deliverables Language
+| **Deliverable** | **Description** | **Timing** |
+| **Mission Alignment Summary** | Documentation of operational goals, security baselines, and engagement communication framework | End of Phase 1 |
+| **Co-Design Artifacts** | Dataverse schema documentation, security role map, initial prototype | End of Phase 2 |
+| **Working Application (DEV)** | Functional capability deployed to development environment with stakeholder access | Ongoing from Phase 3 |
+| **IOC Release** | Production-deployed solution meeting defined operational capability threshold | End of Phase 4/5 |
+| **Training Materials** | Role-based user guides for operators, supervisors, and administrators | Phase 5 |
+| **Decision Log** | Documented record of architecture and direction decisions made during delivery | Ongoing, delivered at IOC |
+| **Sustainment Handoff Package** | Solution documentation, environment configuration guide, enhancement backlog | Phase 6 / End of engagement |
+
+## Section 3: Performance Standards Language
+| Performance Standards: (1) Feedback-to-Build Cycle: The Contractor shall incorporate stakeholder feedback categorized as 'Do Now' (urgent, this-cycle changes) into the development environment within 48 hours of stakeholder session conclusion. (2) Engagement Session Attendance: The Contractor shall conduct twice-weekly engagement sessions with the government business owner or designated representative until IOC is achieved; these sessions shall occur on Tuesday and Thursday, shall last a minimum of one hour, and shall include live demonstration of working capability and structured feedback solicitation. (3) IOC Delivery Commitment: The Contractor shall achieve IOC as defined in this SOW within the specified target window; delays in government-furnished property (such as environment provisioning or stakeholder availability) may extend the timeline by mutual agreement and written revision. (4) Security and Compliance: The solution shall meet the security requirements established during Mission Alignment and documented in the security baseline; Role-Based Access Control (RBAC) shall be enforced from the first production deployment; no data classified above the specified classification level shall be present in any non-production environment. |
+
+## Section 4: Intellectual Property and Reuse Language
+| Intellectual Property and Reuse: The Contractor shall design and build solution components (data models, security frameworks, process templates, and integrations) as reusable assets. The Government shall retain ownership of all solution-specific deliverables, code, configuration, and data produced during this engagement. The Contractor may retain ownership of the REDM methodology framework, training materials, and organizational knowledge gained during the engagement, provided that solution-specific intellectual property, source code, and configuration artifacts are transferred to Government ownership. The Contractor shall provide all source code, solutions, configurations, and design artifacts to the Government in a format that allows future Government contractors to modify, extend, or maintain the solution without dependency on Contractor-specific tools, processes, or proprietary components. |
+
+## Section 5: Government Furnished Property / Requirements
+| **Item** | **Required By** | **Notes** |
+| **Power Platform environment access** | Phase 1 | DEV environment provisioned and accessible before Day 1 |
+| **Stakeholder availability for twice-weekly sessions** | Phase 3 start | Business owner or designee must attend all Tuesday/Thursday sessions until IOC |
+| **SME access during Co-Design** | Phase 2 | Named subject matter experts available for 3–5 day intensive co-design workshop |
+| **Security/IA contact** | Phase 1 | Dedicated resource for security baseline establishment and compliance review |
+| **Entra ID / identity provider access** | Phase 2 | For configuration of security roles and RBAC before build cycles begin |
+
+## Section 6: Acceptance Criteria Language
+| Acceptance Criteria and IOC Milestone: Initial Operational Capability (IOC) is achieved when all of the following conditions are met: (a) the solution is deployed to the production environment and is accessible to end-users; (b) core operational workflows are functional end-to-end and perform the primary mission capability as defined in the Mission Alignment session; (c) security roles are configured and enforced per the approved RBAC design and the established security baseline; (d) operator training and leadership training are complete, and trained personnel can perform core workflows without Contractor guidance; and (e) the Government business owner in writing confirms that the system supports real operational use. Once IOC is achieved, the solution is accepted by the Government. Feature enhancements, optimization work, and non-critical capability additions are post-IOC activities and shall be governed by the sustainment engagement cadence established at IOC. |
+
+## Section 7: A Note on Requirements in REDM Engagements
+| Requirements Management: Requirements for this engagement are managed through iterative stakeholder engagement rather than a static upfront requirements document. The Mission Alignment Summary, Co-Design Artifacts, and Decision Log serve as the official record of functional requirements and scope. New requests or refinements identified during Rapid Build Cycles shall be triaged into one of three categories: (1) Do Now — items incorporated into the current two-week build cycle (within 48 hours of stakeholder session); (2) Queue — items recorded in the backlog for consideration in future cycles; (3) Escalate — items that require sponsor decision and may impact timeline or scope. The Contractor shall brief the Government Product Owner on all incoming items and the triage category assignment at least weekly. Changes to the accepted IOC scope shall be documented in writing and shall constitute a scope modification requiring contract amendment. |
+
+| IOC is the acceptance milestone. Everything before IOC is the path to get there. Everything after IOC is the mission-driven growth of a system that is already working. |
