@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ARNG Workshop — Operations Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg-0: oklch(0.15 0.005 250);
+    --bg-1: oklch(0.18 0.006 250);
+    --bg-2: oklch(0.21 0.007 250);
+    --bg-3: oklch(0.24 0.008 250);
+    --bg-hover: oklch(0.26 0.010 250);
+    --line: oklch(0.32 0.010 250);
+    --line-strong: oklch(0.42 0.012 250);
+    --fg-0: oklch(0.96 0.005 250);
+    --fg-1: oklch(0.82 0.006 250);
+    --fg-2: oklch(0.62 0.008 250);
+    --fg-3: oklch(0.46 0.010 250);
+    --accent: oklch(0.80 0.13 85);        /* muted signal gold */
+    --accent-dim: oklch(0.62 0.09 85);
+    --cyan: oklch(0.76 0.09 210);         /* live / interactive */
+    --cyan-dim: oklch(0.58 0.07 210);
+    --danger: oklch(0.68 0.18 25);
+    --green: oklch(0.76 0.12 150);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--fg-1); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased; }
+  body {
+    min-height: 100vh;
+    background-image:
+      linear-gradient(oklch(0.20 0.006 250 / 0.4) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.20 0.006 250 / 0.4) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: -1px -1px;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  ::selection { background: var(--accent); color: var(--bg-0); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--line-strong); }
+
+  button { font-family: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ---------- CONFIG (tweakable) ---------- */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentHue": 85,
+  "soldierCount": 336482,
+  "userName": "SGT Reyes",
+  "userUnit": "J3 \/ 29th ID",
+  "density": "comfortable",
+  "showGrid": true
+}/*EDITMODE-END*/;
+
+/* ---------- DATA ---------- */
+const TILES = [
+  {
+    id: "workshops",
+    code: "WS",
+    title: "Workshops",
+    blurb: "Operational applications built for the field.",
+    count: 42,
+    unit: "apps",
+    accent: "gold",
+    items: [
+      { name: "Readiness Tracker",        meta: "v4.2 · 1,284 users",  status: "live",    pinned: true },
+      { name: "Mobilization Planner",     meta: "v2.1 · 642 users",    status: "live",    pinned: true },
+      { name: "Medical Readiness Board",  meta: "v3.0 · 418 users",    status: "live" },
+      { name: "Inventory Control",        meta: "v1.7 · 221 users",    status: "live" },
+      { name: "Training Attendance",      meta: "v0.9 · beta",         status: "beta" },
+      { name: "Duty Status Console",      meta: "v0.4 · beta",         status: "beta" },
+    ],
+  },
+  {
+    id: "datasets",
+    code: "DS",
+    title: "Datasets",
+    blurb: "Authoritative data tables ingested from source systems.",
+    count: 187,
+    unit: "tables",
+    accent: "cyan",
+    items: [
+      { name: "DTMS / Training Records",   meta: "updated 4m ago · 12.4M rows",   status: "synced" },
+      { name: "DRRS-A Readiness Feed",      meta: "updated 11m ago · 841K rows",  status: "synced" },
+      { name: "MEDPROS Medical Status",     meta: "updated 22m ago · 336K rows",  status: "synced" },
+      { name: "IPPS-A Personnel",           meta: "updated 3m ago · 412K rows",   status: "synced" },
+      { name: "GFEBS Financials",           meta: "updated 1h ago · 2.1M rows",   status: "stale" },
+      { name: "DPAS Property Book",         meta: "updated 34m ago · 988K rows",  status: "synced" },
+    ],
+  },
+  {
+    id: "objects",
+    code: "OBJ",
+    title: "Objects",
+    blurb: "Modeled entities linking people, units, equipment and events.",
+    count: 14,
+    unit: "types",
+    accent: "gold",
+    items: [
+      { name: "Soldier",       meta: "336,482 · 28 properties",  status: "live" },
+      { name: "Unit",          meta: "3,148 · 22 properties",    status: "live" },
+      { name: "Equipment",     meta: "94,712 · 19 properties",   status: "live" },
+      { name: "Training Event",meta: "18,204 · 17 properties",   status: "live" },
+      { name: "Mission",       meta: "612 · 14 properties",      status: "live" },
+      { name: "Installation",  meta: "142 · 11 properties",      status: "live" },
+    ],
+  },
+  {
+    id: "sops",
+    code: "SOP",
+    title: "ARNG Builder SOPs",
+    blurb: "Standard operating procedures for pipeline and app authoring.",
+    count: 28,
+    unit: "docs",
+    accent: "cyan",
+    items: [
+      { name: "Pipeline Authoring Standards",    meta: "rev 2026.02 · 14 pages",    status: "current" },
+      { name: "Object Model Design Guide",        meta: "rev 2026.01 · 22 pages",    status: "current" },
+      { name: "Workshop UI Patterns",             meta: "rev 2025.12 · 31 pages",    status: "current" },
+      { name: "Data Classification & Handling",   meta: "rev 2026.03 · 18 pages",    status: "current" },
+      { name: "Release & Promotion Checklist",    meta: "rev 2025.11 · 6 pages",     status: "review" },
+      { name: "Incident Response Runbook",        meta: "rev 2026.02 · 12 pages",    status: "current" },
+    ],
+  },
+  {
+    id: "vantage",
+    code: "VT",
+    title: "Vantage Tools",
+    blurb: "Analytic tooling for commanders and staff.",
+    count: 9,
+    unit: "tools",
+    accent: "gold",
+    items: [
+      { name: "Force Readiness Dashboard", meta: "live · 74 dashboards",  status: "live" },
+      { name: "Unit Comparison Console",    meta: "live · 22 views",       status: "live" },
+      { name: "Predictive Fill Model",      meta: "live · model v3.1",     status: "live" },
+      { name: "Geo Mission Map",            meta: "live · 48 layers",      status: "live" },
+      { name: "Cohort Explorer",            meta: "beta · 8 cohorts",      status: "beta" },
+    ],
+  },
+];
+
+/* ---------- ATOMS ---------- */
+const Corner = ({ pos }) => {
+  const p = {
+    tl: { top: -1, left: -1, borderTop: '1px solid var(--accent)', borderLeft: '1px solid var(--accent)' },
+    tr: { top: -1, right: -1, borderTop: '1px solid var(--accent)', borderRight: '1px solid var(--accent)' },
+    bl: { bottom: -1, left: -1, borderBottom: '1px solid var(--accent)', borderLeft: '1px solid var(--accent)' },
+    br: { bottom: -1, right: -1, borderBottom: '1px solid var(--accent)', borderRight: '1px solid var(--accent)' },
+  }[pos];
+  return <span aria-hidden style={{ position: 'absolute', width: 10, height: 10, pointerEvents: 'none', ...p }} />;
+};
+
+const Dot = ({ color = 'var(--cyan)', size = 6, pulse = false }) => (
+  <span style={{
+    display: 'inline-block', width: size, height: size, borderRadius: '50%',
+    background: color, boxShadow: pulse ? `0 0 0 0 ${color}` : 'none',
+    animation: pulse ? 'pulse 1.8s ease-out infinite' : 'none',
+    verticalAlign: 'middle',
+  }} />
+);
+
+const StatusPill = ({ status }) => {
+  const map = {
+    live:    { c: 'var(--green)',  t: 'LIVE' },
+    synced:  { c: 'var(--green)',  t: 'SYNCED' },
+    current: { c: 'var(--green)',  t: 'CURRENT' },
+    beta:    { c: 'var(--cyan)',   t: 'BETA' },
+    review:  { c: 'var(--accent)', t: 'REVIEW' },
+    stale:   { c: 'var(--danger)', t: 'STALE' },
+  }[status] || { c: 'var(--fg-2)', t: status.toUpperCase() };
+  return (
+    <span className="mono" style={{
+      fontSize: 10, letterSpacing: '0.08em', color: map.c,
+      border: `1px solid ${map.c}`, padding: '2px 6px', lineHeight: 1,
+      display: 'inline-flex', alignItems: 'center', gap: 6,
+    }}>
+      <span style={{ width: 4, height: 4, borderRadius: '50%', background: map.c, display: 'inline-block' }} />
+      {map.t}
+    </span>
+  );
+};
+
+/* ---------- HEADER ---------- */
+function Header({ soldierCount, userName }) {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  const zulu = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+  const zuluStr = zulu.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+  const formatted = useMemo(() => soldierCount.toLocaleString('en-US'), [soldierCount]);
+
+  return (
+    <header style={{
+      position: 'relative',
+      borderBottom: '1px solid var(--line)',
+      background: 'linear-gradient(180deg, var(--bg-1), var(--bg-0))',
+    }}>
+      {/* top rail */}
+      <div className="mono" style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '8px 24px', borderBottom: '1px solid var(--line)',
+        fontSize: 10, letterSpacing: '0.14em', color: 'var(--fg-3)',
+      }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Dot color="var(--green)" pulse />
+          <span>SESSION · {userName.toUpperCase()}</span>
+          <span style={{ color: 'var(--line-strong)' }}>│</span>
+          <span>CLASSIFICATION · UNCLASSIFIED // FOUO</span>
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span>ENV · PROD</span>
+          <span style={{ color: 'var(--line-strong)' }}>│</span>
+          <span>BUILD 2026.04.21-A</span>
+        </span>
+      </div>
+
+      {/* main header row */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
+        alignItems: 'center',
+        padding: '22px 24px',
+        gap: 24,
+      }}>
+        {/* LEFT — page title */}
+        <div>
+          <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--accent)', marginBottom: 6 }}>
+            ◆ ARMY NATIONAL GUARD / OPERATIONS WORKBENCH
+          </div>
+          <h1 style={{
+            margin: 0, fontSize: 28, fontWeight: 600, letterSpacing: '-0.01em', color: 'var(--fg-0)',
+            fontFamily: 'Inter',
+          }}>
+            Workshop Console
+            <span className="mono" style={{ fontSize: 12, color: 'var(--fg-3)', marginLeft: 12, fontWeight: 400, letterSpacing: '0.1em' }}>
+              / LANDING
+            </span>
+          </h1>
+        </div>
+
+        {/* CENTER — soldier count */}
+        <div style={{
+          position: 'relative',
+          border: '1px solid var(--line)',
+          padding: '14px 28px',
+          minWidth: 320,
+          textAlign: 'center',
+          background: 'var(--bg-1)',
+        }}>
+          <Corner pos="tl" /><Corner pos="tr" /><Corner pos="bl" /><Corner pos="br" />
+          <div className="mono" style={{ fontSize: 9.5, letterSpacing: '0.22em', color: 'var(--fg-3)', marginBottom: 8 }}>
+            SOLDIERS ON RECORD · ALL COMPONENTS
+          </div>
+          <div className="mono" style={{
+            fontSize: 36, fontWeight: 600, color: 'var(--accent)',
+            letterSpacing: '0.04em', lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+          }}>
+            {formatted}
+          </div>
+          <div className="mono" style={{ fontSize: 10, color: 'var(--fg-2)', marginTop: 8, letterSpacing: '0.12em' }}>
+            <span style={{ color: 'var(--green)' }}>▲ 412</span>
+            <span style={{ color: 'var(--line-strong)', margin: '0 8px' }}>│</span>
+            <span>SINCE 0000Z</span>
+          </div>
+        </div>
+
+        {/* RIGHT — date/time */}
+        <div style={{ textAlign: 'right' }}>
+          <div className="mono" style={{ fontSize: 10, letterSpacing: '0.18em', color: 'var(--fg-3)', marginBottom: 6 }}>
+            {dateStr}
+          </div>
+          <div className="mono" style={{
+            fontSize: 28, fontWeight: 500, color: 'var(--fg-0)',
+            letterSpacing: '0.06em', lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+          }}>
+            {timeStr}
+            <span style={{ color: 'var(--fg-3)', fontSize: 14, marginLeft: 8, fontWeight: 400 }}>
+              LOCAL
+            </span>
+          </div>
+          <div className="mono" style={{ fontSize: 10, color: 'var(--fg-2)', marginTop: 6, letterSpacing: '0.12em' }}>
+            {zuluStr}Z ZULU
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ---------- WELCOME ---------- */
+function Welcome({ userName, userUnit }) {
+  const hour = new Date().getHours();
+  const greeting = hour < 5 ? 'Good evening' : hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  return (
+    <section style={{
+      position: 'relative',
+      padding: '28px 24px',
+      borderBottom: '1px solid var(--line)',
+      display: 'grid',
+      gridTemplateColumns: '1fr auto',
+      alignItems: 'end',
+      gap: 24,
+      background: 'var(--bg-0)',
+    }}>
+      <div>
+        <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--cyan)', marginBottom: 10 }}>
+          ├─ WELCOME
+        </div>
+        <div style={{ fontSize: 22, fontWeight: 500, color: 'var(--fg-0)', letterSpacing: '-0.005em', maxWidth: 780, textWrap: 'pretty' }}>
+          {greeting}, <span style={{ color: 'var(--accent)' }}>{userName}</span>. You have <span className="mono" style={{ color: 'var(--fg-0)' }}>3 workshops</span> pinned and <span className="mono" style={{ color: 'var(--fg-0)' }}>2 datasets</span> flagged for review this morning. Start from a tile below, or jump back into your last session — <span style={{ color: 'var(--cyan)', cursor: 'pointer', borderBottom: '1px dashed var(--cyan-dim)' }}>Readiness Tracker</span>.
+        </div>
+        <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginTop: 10, letterSpacing: '0.06em' }}>
+          {userUnit} · last sign-in 07:42 yesterday from CONUS-VA
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 10 }}>
+        <QuickAction label="Resume Session" kbd="R" primary />
+        <QuickAction label="Search" kbd="/" />
+        <QuickAction label="What's New" kbd="N" />
+      </div>
+    </section>
+  );
+}
+
+function QuickAction({ label, kbd, primary }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: primary ? (hover ? 'var(--accent)' : 'var(--bg-2)') : (hover ? 'var(--bg-3)' : 'var(--bg-1)'),
+        color: primary ? (hover ? 'var(--bg-0)' : 'var(--accent)') : 'var(--fg-1)',
+        border: `1px solid ${primary ? 'var(--accent-dim)' : 'var(--line)'}`,
+        padding: '8px 12px',
+        cursor: 'pointer',
+        fontSize: 12, fontWeight: 500,
+        display: 'inline-flex', alignItems: 'center', gap: 10,
+        transition: 'background 120ms, color 120ms',
+        letterSpacing: '0.02em',
+      }}
+    >
+      {label}
+      <span className="mono" style={{
+        fontSize: 10, padding: '1px 5px',
+        border: `1px solid ${primary && hover ? 'var(--bg-0)' : 'var(--line-strong)'}`,
+        color: primary && hover ? 'var(--bg-0)' : 'var(--fg-3)',
+        opacity: 0.9,
+      }}>{kbd}</span>
+    </button>
+  );
+}
+
+/* ---------- TILE ---------- */
+function Tile({ tile, expanded, onToggle, index }) {
+  const [hover, setHover] = useState(false);
+  const accentVar = tile.accent === 'cyan' ? 'var(--cyan)' : 'var(--accent)';
+  const accentDimVar = tile.accent === 'cyan' ? 'var(--cyan-dim)' : 'var(--accent-dim)';
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        border: `1px solid ${expanded ? accentDimVar : (hover ? 'var(--line-strong)' : 'var(--line)')}`,
+        background: expanded ? 'var(--bg-2)' : (hover ? 'var(--bg-1)' : 'var(--bg-1)'),
+        transition: 'border-color 140ms, background 140ms',
+        gridColumn: expanded ? 'span 2' : 'span 1',
+      }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {/* corners when hovered or expanded */}
+      {(hover || expanded) && (
+        <>
+          <span style={{ position: 'absolute', top: -1, left: -1, width: 8, height: 8, borderTop: `1px solid ${accentVar}`, borderLeft: `1px solid ${accentVar}` }} />
+          <span style={{ position: 'absolute', top: -1, right: -1, width: 8, height: 8, borderTop: `1px solid ${accentVar}`, borderRight: `1px solid ${accentVar}` }} />
+          <span style={{ position: 'absolute', bottom: -1, left: -1, width: 8, height: 8, borderBottom: `1px solid ${accentVar}`, borderLeft: `1px solid ${accentVar}` }} />
+          <span style={{ position: 'absolute', bottom: -1, right: -1, width: 8, height: 8, borderBottom: `1px solid ${accentVar}`, borderRight: `1px solid ${accentVar}` }} />
+        </>
+      )}
+
+      {/* header */}
+      <button
+        onClick={onToggle}
+        style={{
+          width: '100%', textAlign: 'left', background: 'transparent', border: 'none',
+          padding: '18px 18px 16px', cursor: 'pointer', color: 'inherit',
+          display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: 14, alignItems: 'start',
+        }}
+      >
+        {/* glyph */}
+        <div style={{
+          width: 44, height: 44,
+          border: `1px solid ${accentDimVar}`,
+          color: accentVar,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'JetBrains Mono', fontSize: 11, fontWeight: 600,
+          letterSpacing: '0.05em',
+          background: expanded ? `color-mix(in oklch, ${accentVar} 10%, transparent)` : 'transparent',
+        }}>
+          {tile.code}
+        </div>
+
+        <div>
+          <div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)', letterSpacing: '0.16em', marginBottom: 4 }}>
+            0{index + 1} / TILE
+          </div>
+          <div style={{ fontSize: 18, fontWeight: 600, color: 'var(--fg-0)', letterSpacing: '-0.005em' }}>
+            {tile.title}
+          </div>
+          <div style={{ fontSize: 12.5, color: 'var(--fg-2)', marginTop: 6, lineHeight: 1.45, maxWidth: 420, textWrap: 'pretty' }}>
+            {tile.blurb}
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'right' }}>
+          <div className="mono" style={{
+            fontSize: 24, fontWeight: 500, color: accentVar,
+            letterSpacing: '0.02em', lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+          }}>
+            {tile.count}
+          </div>
+          <div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)', letterSpacing: '0.14em', marginTop: 4 }}>
+            {tile.unit.toUpperCase()}
+          </div>
+        </div>
+      </button>
+
+      {/* collapsed footer row */}
+      {!expanded && (
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '10px 18px', borderTop: '1px solid var(--line)',
+          color: 'var(--fg-3)',
+        }}>
+          <span className="mono" style={{ fontSize: 10, letterSpacing: '0.14em' }}>
+            {tile.items.filter(i => i.pinned).length > 0 ? `${tile.items.filter(i => i.pinned).length} PINNED` : 'TAP TO EXPAND'}
+          </span>
+          <span className="mono" style={{ fontSize: 11, color: hover ? accentVar : 'var(--fg-3)', transition: 'color 120ms' }}>
+            OPEN →
+          </span>
+        </div>
+      )}
+
+      {/* expanded items */}
+      {expanded && (
+        <div style={{ borderTop: `1px solid var(--line)` }}>
+          <div className="mono" style={{
+            display: 'grid',
+            gridTemplateColumns: '24px 1fr 1fr auto',
+            gap: 12, padding: '10px 18px',
+            borderBottom: '1px solid var(--line)',
+            fontSize: 10, color: 'var(--fg-3)', letterSpacing: '0.14em',
+            background: 'var(--bg-1)',
+          }}>
+            <span>#</span>
+            <span>NAME</span>
+            <span>METADATA</span>
+            <span>STATUS</span>
+          </div>
+          {tile.items.map((item, i) => (
+            <BreakoutRow key={item.name} item={item} index={i} accent={accentVar} />
+          ))}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '12px 18px', borderTop: '1px solid var(--line)',
+            background: 'var(--bg-1)',
+          }}>
+            <span className="mono" style={{ fontSize: 10, color: 'var(--fg-3)', letterSpacing: '0.14em' }}>
+              SHOWING {tile.items.length} OF {tile.count}
+            </span>
+            <span className="mono" style={{ fontSize: 11, color: accentVar, cursor: 'pointer', letterSpacing: '0.1em' }}>
+              VIEW ALL {tile.title.toUpperCase()} →
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function BreakoutRow({ item, index, accent }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '24px 1fr 1fr auto',
+        gap: 12, padding: '12px 18px',
+        borderBottom: '1px solid var(--line)',
+        alignItems: 'center',
+        background: hover ? 'var(--bg-3)' : 'transparent',
+        cursor: 'pointer',
+        transition: 'background 100ms',
+      }}
+    >
+      <span className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', fontVariantNumeric: 'tabular-nums' }}>
+        {String(index + 1).padStart(2, '0')}
+      </span>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {item.pinned && <span style={{ color: accent, fontSize: 10 }}>◆</span>}
+        <span style={{ color: 'var(--fg-0)', fontSize: 13.5, fontWeight: 500 }}>{item.name}</span>
+      </span>
+      <span className="mono" style={{ fontSize: 11, color: 'var(--fg-2)' }}>{item.meta}</span>
+      <StatusPill status={item.status} />
+    </div>
+  );
+}
+
+/* ---------- TILES GRID ---------- */
+function Tiles() {
+  const [expanded, setExpanded] = useState(null);
+  const toggle = (id) => setExpanded(prev => prev === id ? null : id);
+
+  return (
+    <section style={{ padding: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
+        <div>
+          <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--accent)' }}>
+            ├─ ENTRY POINTS
+          </div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fg-0)', marginTop: 4 }}>
+            Choose a module to begin
+          </div>
+        </div>
+        <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', letterSpacing: '0.1em' }}>
+          {expanded ? 'CLICK TO COLLAPSE · ESC' : 'CLICK A TILE TO EXPAND'}
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 14,
+      }}>
+        {TILES.map((tile, i) => (
+          <Tile key={tile.id} tile={tile} index={i} expanded={expanded === tile.id} onToggle={() => toggle(tile.id)} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ---------- FOOTER ---------- */
+function Footer() {
+  return (
+    <footer className="mono" style={{
+      display: 'flex', justifyContent: 'space-between',
+      padding: '10px 24px',
+      borderTop: '1px solid var(--line)',
+      fontSize: 10, color: 'var(--fg-3)', letterSpacing: '0.14em',
+      background: 'var(--bg-1)',
+    }}>
+      <span>◆ ARNG OPERATIONS WORKBENCH · TIER 1 AUTHORIZED</span>
+      <span>HELP · F1 &nbsp;│&nbsp; COMMAND PALETTE · ⌘K &nbsp;│&nbsp; SIGN OUT · ⇧⌘Q</span>
+    </footer>
+  );
+}
+
+/* ---------- TWEAKS ---------- */
+function TweaksPanel({ visible, state, setState }) {
+  if (!visible) return null;
+  return (
+    <div style={{
+      position: 'fixed', bottom: 16, right: 16, zIndex: 50,
+      background: 'var(--bg-1)', border: '1px solid var(--line-strong)',
+      width: 280, padding: 14, fontSize: 12,
+      boxShadow: '0 10px 40px oklch(0 0 0 / 0.5)',
+    }}>
+      <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--accent)', marginBottom: 12 }}>
+        ◆ TWEAKS
+      </div>
+      <TweakRow label="Accent Hue">
+        <input type="range" min="0" max="360" value={state.accentHue}
+          onChange={(e) => setState({ ...state, accentHue: +e.target.value })}
+          style={{ width: '100%' }} />
+        <span className="mono" style={{ fontSize: 10, color: 'var(--fg-3)' }}>{state.accentHue}°</span>
+      </TweakRow>
+      <TweakRow label="Soldier Count">
+        <input type="number" value={state.soldierCount}
+          onChange={(e) => setState({ ...state, soldierCount: +e.target.value })}
+          style={inputStyle} />
+      </TweakRow>
+      <TweakRow label="User Name">
+        <input type="text" value={state.userName}
+          onChange={(e) => setState({ ...state, userName: e.target.value })}
+          style={inputStyle} />
+      </TweakRow>
+      <TweakRow label="User Unit">
+        <input type="text" value={state.userUnit}
+          onChange={(e) => setState({ ...state, userUnit: e.target.value })}
+          style={inputStyle} />
+      </TweakRow>
+      <TweakRow label="Grid">
+        <button
+          onClick={() => setState({ ...state, showGrid: !state.showGrid })}
+          style={{ ...inputStyle, cursor: 'pointer', textAlign: 'left' }}
+        >
+          {state.showGrid ? 'ON' : 'OFF'}
+        </button>
+      </TweakRow>
+    </div>
+  );
+}
+const inputStyle = {
+  background: 'var(--bg-0)', color: 'var(--fg-0)',
+  border: '1px solid var(--line)', padding: '4px 6px', fontSize: 11,
+  width: '100%', fontFamily: 'JetBrains Mono',
+};
+function TweakRow({ label, children }) {
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <div className="mono" style={{ fontSize: 10, color: 'var(--fg-3)', letterSpacing: '0.1em', marginBottom: 4 }}>
+        {label.toUpperCase()}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/* ---------- APP ---------- */
+function App() {
+  const [state, setState] = useState(TWEAK_DEFAULTS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+
+  useEffect(() => {
+    const onMsg = (e) => {
+      if (!e.data || typeof e.data !== 'object') return;
+      if (e.data.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--accent', `oklch(0.80 0.13 ${state.accentHue})`);
+    document.documentElement.style.setProperty('--accent-dim', `oklch(0.62 0.09 ${state.accentHue})`);
+    document.body.style.backgroundImage = state.showGrid
+      ? `linear-gradient(oklch(0.20 0.006 250 / 0.4) 1px, transparent 1px),
+         linear-gradient(90deg, oklch(0.20 0.006 250 / 0.4) 1px, transparent 1px)`
+      : 'none';
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: state }, '*');
+  }, [state]);
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header soldierCount={state.soldierCount} userName={state.userName} />
+      <Welcome userName={state.userName} userUnit={state.userUnit} />
+      <Tiles />
+      <div style={{ flex: 1 }} />
+      <Footer />
+      <TweaksPanel visible={tweaksOpen} state={state} setState={setState} />
+      <style>{`
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 currentColor; }
+          70% { box-shadow: 0 0 0 6px transparent; }
+          100% { box-shadow: 0 0 0 0 transparent; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
